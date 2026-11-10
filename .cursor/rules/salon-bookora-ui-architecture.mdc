@@ -1,0 +1,23 @@
+---
+description: SalonBookora UI reuse, design system, MVVM folders
+alwaysApply: true
+---
+
+# UI + Architecture
+
+## Common widgets
+Build once in `lib/common/`, reuse everywhere. Extend via props — never duplicate.
+Create components only when needed (buttons, fields, AuroraBackground, cards, snackbars, loaders, StatusBadge, LanguageSelector, etc.).
+
+## Design system (`lib/core/`)
+Centralize: colors, spacing, radius, typography, theme, shadows, dimensions.
+No hardcoded repeated colors/spacing/type styles. Keep Aurora header consistent on Splash/Welcome/Login/Register/OTP.
+
+## MVVM
+View = UI only. ViewModel = state/presentation. Repository = data. Service = API. Model = types.
+No API calls or business logic in widgets. Use Riverpod.
+
+## Folders
+Flutter: `app` `core` `common` `data` `features` `l10n`
+Backend: `config` `common` `middleware` `modules` `providers` `database`
+No unnecessary nesting.

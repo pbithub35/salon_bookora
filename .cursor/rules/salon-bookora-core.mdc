@@ -1,0 +1,25 @@
+---
+description: SalonBookora permanent core rules — tokens, stack, workflow, response
+alwaysApply: true
+---
+
+# SalonBookora Core
+
+## Tokens
+- Short answers. No lengthy explanations, no requirement restating, no full-file dumps.
+- Inspect only task-relevant files. Smallest complete change. No unrelated refactors.
+- Never regenerate the whole project for small changes.
+- Do not create tests/docs unless explicitly requested.
+- Response format only: **Completed** / **Files changed** / **Pending**.
+
+## Stack (do not replace without approval)
+Frontend: Flutter Web+Android, MVVM, Riverpod, GoRouter, Dio, Flutter Secure Storage, ARB l10n (en/hi/pa), ScreenUtil.
+Backend: Node/Express, MySQL, Prisma, Zod.
+
+## Spec
+Master: `docs/PHASE_1_SPEC.md`. Follow it. Reuse existing widgets/services before adding new ones.
+
+## Workflow
+1. Inspect relevant files 2. Reuse commons 3. Implement 4. Update l10n if new strings 5. Short summary.
+Bugfixes: smallest area only.
+Deps: check existing packages first; no overlapping libs.

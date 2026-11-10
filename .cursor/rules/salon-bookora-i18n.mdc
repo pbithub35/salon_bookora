@@ -1,0 +1,20 @@
+---
+description: SalonBookora localization rules (en/hi/pa)
+alwaysApply: true
+---
+
+# Localization
+
+Languages: English `en`, Hindi `hi`, Punjabi `pa`.
+
+Files only:
+- `lib/l10n/app_en.arb`
+- `lib/l10n/app_hi.arb`
+- `lib/l10n/app_pa.arb`
+
+Rules:
+- Every user-facing string from generated l10n — never hardcode in widgets.
+- Add new keys to all three ARB files. No per-screen string files. No duplicate keys.
+- One reusable `LanguageSelector` + Riverpod `LocaleProvider`.
+- Show on Welcome and later Settings/Profile.
+- Persist locale; apply on launch; update UI without restart.
