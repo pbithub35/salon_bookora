@@ -154,6 +154,22 @@ class AppLocalizationsHi extends AppLocalizations {
   String get ownerRegisterTitle => 'Salon Owner Registration';
 
   @override
+  String get ownerRegisterFormTitle => 'Create Business Account';
+
+  @override
+  String get ownerRegisterFormSubtitle =>
+      'Enter your details to create your owner account. You can add shops, services and staff later from the dashboard.';
+
+  @override
+  String get brandNameLabel => 'Brand Name (Optional)';
+
+  @override
+  String get hintBrandName => 'e.g. Looks Salon';
+
+  @override
+  String get businessAccount => 'Business Account';
+
+  @override
   String get step1Title => 'Owner Details';
 
   @override
@@ -222,7 +238,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get ownerSuccessDesc =>
-      'Your salon application has been submitted and is currently pending review.';
+      'Your business account is ready. Add your first shop to start taking bookings.';
 
   @override
   String get continueToPortal => 'Go to Portal';
@@ -299,13 +315,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get seedCustomer => 'Customer';
 
   @override
-  String get seedOwnerPending => 'Owner Pending';
+  String get seedOwnerPending => 'Owner • Draft Shop';
 
   @override
-  String get seedOwnerApproved => 'Owner Approved';
+  String get seedOwnerApproved => 'Owner • Live Shops';
 
   @override
-  String get seedOwnerRejected => 'Owner Rejected';
+  String get seedOwnerRejected => 'Owner • New Account';
 
   @override
   String get seedSuspended => 'Suspended';
@@ -409,7 +425,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get accountActivated => 'Account Activated';
 
   @override
-  String get applicationReceived => 'Application Received';
+  String get applicationReceived => 'Business Account Created';
 
   @override
   String get customerSuccessNote =>
@@ -417,7 +433,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get ownerSuccessNote =>
-      'Our verification team is reviewing your salon profile and address. You will receive real-time notifications on approval.';
+      'From your dashboard you can create shops, add services and staff, set offers, and configure booking rules.';
 
   @override
   String get badgeApplicationUnderReview => 'APPLICATION UNDER REVIEW';
@@ -785,4 +801,311 @@ class AppLocalizationsHi extends AppLocalizations {
   String validationFieldRequired(String field) {
     return '$field is required';
   }
+
+  @override
+  String get navShops => 'Shops';
+
+  @override
+  String get navCalendar => 'Calendar';
+
+  @override
+  String get navTeam => 'Team';
+
+  @override
+  String get shopsTitle => 'My Shops';
+
+  @override
+  String get shopsEmptyTitle => 'No shops yet';
+
+  @override
+  String get shopsEmptySubtitle =>
+      'Add your first shop to manage services, team, and bookings.';
+
+  @override
+  String get addShop => 'Add shop';
+
+  @override
+  String get createShopTitle => 'Create shop';
+
+  @override
+  String get saveShop => 'Save shop';
+
+  @override
+  String get shopSaved => 'Shop created successfully';
+
+  @override
+  String get shopDetails => 'Shop details';
+
+  @override
+  String get shopServicesPrices => 'Services & prices';
+
+  @override
+  String get shopMembers => 'Members';
+
+  @override
+  String get shopHours => 'Hours';
+
+  @override
+  String get shopBookingPage => 'Booking page';
+
+  @override
+  String get addMember => 'Add member';
+
+  @override
+  String get removeMember => 'Remove';
+
+  @override
+  String get memberName => 'Member name';
+
+  @override
+  String get memberRole => 'Role';
+
+  @override
+  String get roleOwner => 'Owner';
+
+  @override
+  String get roleSubAdmin => 'Sub-admin';
+
+  @override
+  String get roleStaff => 'Staff';
+
+  @override
+  String get permManageBookings => 'Manage bookings';
+
+  @override
+  String get permManageServices => 'Manage services';
+
+  @override
+  String get permManageStaff => 'Manage staff';
+
+  @override
+  String get permManageShopSettings => 'Manage shop settings';
+
+  @override
+  String get memberAdded => 'Member added';
+
+  @override
+  String get memberRemoved => 'Member removed';
+
+  @override
+  String get cannotRemoveOwner => 'The owner cannot be removed';
+
+  @override
+  String get comingSoonCalendar => 'Calendar management is coming soon.';
+
+  @override
+  String get comingSoonTeam =>
+      'Cross-shop team overview is coming soon. Manage members inside each shop.';
+
+  @override
+  String get bookingPageLink => 'Public booking link';
+
+  @override
+  String get bookingPagePreviewOnly =>
+      'यह केवल पूर्वावलोकन है। प्रकाशन सुविधा जुड़ने पर सार्वजनिक बुकिंग लिंक उपलब्ध होगा।';
+
+  @override
+  String get copyLink => 'Copy link';
+
+  @override
+  String get linkCopied => 'Booking link copied';
+
+  @override
+  String get noServicesYet => 'No services added yet';
+
+  @override
+  String get addService => 'सेवा जोड़ें';
+
+  @override
+  String get serviceName => 'सेवा का नाम';
+
+  @override
+  String get serviceCategory => 'श्रेणी (वैकल्पिक)';
+
+  @override
+  String get serviceDuration => 'अवधि (मिनट)';
+
+  @override
+  String get servicePrice => 'कीमत (₹)';
+
+  @override
+  String get validationPositiveDuration => 'शून्य से अधिक अवधि दर्ज करें';
+
+  @override
+  String get validationPositivePrice => 'शून्य से अधिक कीमत दर्ज करें';
+
+  @override
+  String get invalidOpeningHours =>
+      'बंद होने का समय, खुलने के समय के बाद होना चाहिए';
+
+  @override
+  String get cancel => 'रद्द करें';
+
+  @override
+  String get editMember => 'सदस्य संपादित करें';
+
+  @override
+  String get saveMember => 'सदस्य सहेजें';
+
+  @override
+  String get memberPhoneAlreadyUsed =>
+      'इस फ़ोन नंबर वाला सदस्य इस दुकान में पहले से मौजूद है';
+
+  @override
+  String get staffServices => 'सेवाएँ जो यह स्टाफ़ सदस्य कर सकता है';
+
+  @override
+  String get staffServicesHint =>
+      'वे जिन सभी सेवाओं के लिए बुक हो सकते हैं, उन्हें चुनें।';
+
+  @override
+  String get noServicesToAssign =>
+      'स्टाफ़ को सेवा देने से पहले इस दुकान में सेवाएँ जोड़ें।';
+
+  @override
+  String durationMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get dayMon => 'Mon';
+
+  @override
+  String get dayTue => 'Tue';
+
+  @override
+  String get dayWed => 'Wed';
+
+  @override
+  String get dayThu => 'Thu';
+
+  @override
+  String get dayFri => 'Fri';
+
+  @override
+  String get daySat => 'Sat';
+
+  @override
+  String get daySun => 'Sun';
+
+  @override
+  String get closed => 'Closed';
+
+  @override
+  String openHours(String open, String close) {
+    return '$open – $close';
+  }
+
+  @override
+  String get shopName => 'Shop name';
+
+  @override
+  String get shopType => 'Shop type';
+
+  @override
+  String get shopPhone => 'Phone number';
+
+  @override
+  String get addressLine1 => 'Address line 1';
+
+  @override
+  String get addressLine2 => 'Address line 2 / landmark';
+
+  @override
+  String get shopEmailOptional => 'Shop email (optional)';
+
+  @override
+  String get shopDescriptionOptional => 'Shop description (optional)';
+
+  @override
+  String get websiteOptional => 'Website (optional)';
+
+  @override
+  String get socialLinksOptional => 'Social links (optional)';
+
+  @override
+  String get gstinOptional => 'GSTIN (optional)';
+
+  @override
+  String get gstinHint => 'You can add GSTIN later in business settings';
+
+  @override
+  String get stepShopDetails => 'Shop details';
+
+  @override
+  String get stepLocation => 'Location';
+
+  @override
+  String get stepHours => 'Opening hours';
+
+  @override
+  String get nextStep => 'Continue';
+
+  @override
+  String get backStep => 'Back';
+
+  @override
+  String get copyHoursToAll => 'Copy Mon hours to all open days';
+
+  @override
+  String get hoursCopied => 'Hours copied to open days';
+
+  @override
+  String get mapPinOptional => 'Map location (optional)';
+
+  @override
+  String get setMapPin => 'Drop a pin';
+
+  @override
+  String get clearMapPin => 'Remove pin';
+
+  @override
+  String get mapPinSet => 'Pin saved — you can change it later';
+
+  @override
+  String get mapPinSkipped => 'No map pin — you can continue without it';
+
+  @override
+  String get addLogo => 'Add logo';
+
+  @override
+  String get addCoverPhoto => 'Add cover photo';
+
+  @override
+  String get mediaSelected => 'Selected';
+
+  @override
+  String get mediaLater => 'Upload later';
+
+  @override
+  String get setupInProgress => 'Setup in progress';
+
+  @override
+  String get shopReady => 'Ready';
+
+  @override
+  String get setupProgressTitle => 'Shop setup progress';
+
+  @override
+  String setupProgressSubtitle(int done, int total) {
+    return '$done of $total steps complete';
+  }
+
+  @override
+  String get actionAddServices => 'Add services';
+
+  @override
+  String get actionAddMembers => 'Add members';
+
+  @override
+  String get actionReviewBookingPage => 'Review booking page';
+
+  @override
+  String get openTime => 'Opens';
+
+  @override
+  String get closeTime => 'Closes';
+
+  @override
+  String get atLeastOneOpenDay => 'Keep at least one day open';
 }

@@ -5,21 +5,20 @@ import '../../../core/constants/app_routes.dart';
 import '../../../core/storage/secure_storage.dart';
 import '../../../core/utils/app_result.dart';
 import '../../../core/utils/auth_destination.dart';
-import '../../../data/models/salon_model.dart';
+import '../../../data/models/business_model.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repositories/auth_repository.dart';
 
 /// Immutable session snapshot.
 class AuthState {
-  const AuthState({this.user, this.salon});
+  const AuthState({this.user, this.business});
 
   final UserModel? user;
-  final SalonModel? salon;
+  final BusinessModel? business;
 
   bool get isLoggedIn => user != null;
 
-  String get destinationRoute =>
-      AuthDestination.resolve(user: user, salon: salon);
+  String get destinationRoute => AuthDestination.resolve(user: user);
 }
 
 /// Loads a persisted session from secure storage (called once in `main()`).
@@ -29,10 +28,12 @@ Future<AuthState> restoreAuthState(SecureStorage storage) async {
   if (token == null || userJson == null) return const AuthState();
 
   try {
-    final salonJson = await storage.readSalonData();
+    final businessJson = await storage.readBusinessData();
     return AuthState(
       user: UserModel.fromJson(userJson),
-      salon: salonJson == null ? null : SalonModel.fromJson(salonJson),
+      business: businessJson == null
+          ? null
+          : BusinessModel.fromJson(businessJson),
     );
   } catch (_) {
     await storage.clearSession();
@@ -110,35 +111,20 @@ class AuthNotifier extends Notifier<AuthState> {
     return _apply(result);
   }
 
+  /// Creates the owner business account (no shop). Shops come later.
   Future<AppResult<Empty>> registerSalonOwner({
     required String ownerFullName,
     required String countryCode,
     required String ownerMobile,
     String? ownerEmail,
-    required String salonName,
-    required String salonType,
-    required String salonContact,
-    required String address,
-    required String city,
-    required String state,
-    required String pincode,
-    String? salonEmail,
-    String? description,
+    String? brandName,
   }) async {
     final result = await _repo.registerSalonOwner(
       ownerFullName: ownerFullName,
       countryCode: countryCode,
       ownerMobile: ownerMobile,
       ownerEmail: ownerEmail,
-      salonName: salonName,
-      salonType: salonType,
-      salonContact: salonContact,
-      address: address,
-      city: city,
-      state: state,
-      pincode: pincode,
-      salonEmail: salonEmail,
-      description: description,
+      brandName: brandName,
     );
     return _apply(result);
   }
@@ -158,10 +144,11 @@ class AuthNotifier extends Notifier<AuthState> {
         .read(secureStorageProvider)
         .saveSession(
           token: session.token,
+          refreshToken: session.refreshToken,
           userJson: session.user.toJson(),
-          salonJson: session.salon?.toJson(),
+          businessJson: session.business?.toJson(),
         );
-    state = AuthState(user: session.user, salon: session.salon);
+    state = AuthState(user: session.user, business: session.business);
     return const AppSuccess(empty);
   }
 

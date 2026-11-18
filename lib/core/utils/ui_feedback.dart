@@ -41,7 +41,15 @@ class UiFeedback {
       AppErrorCodes.server => l10n.errServerTitle,
       AppErrorCodes.unauthorized => l10n.errSessionExpiredTitle,
       AppErrorCodes.accountNotFound => l10n.errAccountNotFoundTitle,
+      AppErrorCodes.accountExists => fallbackTitle ?? l10n.errGenericTitle,
+      AppErrorCodes.accountRestricted =>
+        fallbackTitle ?? l10n.errGenericTitle,
       AppErrorCodes.invalidOtp => l10n.errInvalidOtpTitle,
+      AppErrorCodes.otpRequired => fallbackTitle ?? l10n.errGenericTitle,
+      AppErrorCodes.otpRateLimited => fallbackTitle ?? l10n.errGenericTitle,
+      AppErrorCodes.otpLocked => fallbackTitle ?? l10n.errInvalidOtpTitle,
+      AppErrorCodes.validationError => fallbackTitle ?? l10n.errGenericTitle,
+      AppErrorCodes.forbidden => fallbackTitle ?? l10n.errGenericTitle,
       AppErrorCodes.notFound => l10n.errNotFoundTitle,
       _ => fallbackTitle ?? l10n.errGenericTitle,
     };
@@ -60,6 +68,7 @@ class UiFeedback {
       AppErrorCodes.unauthorized => l10n.errSessionExpiredMessage,
       AppErrorCodes.accountNotFound => l10n.errAccountNotFoundMessage,
       AppErrorCodes.notFound => l10n.errNotFoundMessage,
+      // Prefer API message for auth-specific codes.
       _ => fallback,
     };
   }

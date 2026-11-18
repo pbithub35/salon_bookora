@@ -11,7 +11,10 @@ import '../../../core/constants/app_text_sizes.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../auth/viewmodels/auth_notifier.dart';
 import '../../../core/utils/responsive.dart';
+import '../../../data/models/business_model.dart';
 import '../viewmodels/owner_portal_viewmodel.dart';
+import 'shops_tab_view.dart';
+import 'team_tab_view.dart';
 
 class OwnerShellView extends ConsumerWidget {
   const OwnerShellView({super.key});
@@ -21,7 +24,7 @@ class OwnerShellView extends ConsumerWidget {
     final l10n = context.l10n;
     final selectedTab = ref.watch(ownerPortalViewModelProvider);
     final vm = ref.read(ownerPortalViewModelProvider.notifier);
-    final salon = ref.watch(authProvider).salon;
+    final business = ref.watch(authProvider).business;
     final user = ref.watch(authProvider).user;
 
     return Scaffold(
@@ -50,7 +53,7 @@ class OwnerShellView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    salon?.salonName ?? 'Royal Salon & Spa',
+                    business?.brandName ?? l10n.appName,
                     style: TextStyle(
                       fontSize: AppTextSizes.bodyMedium,
                       fontWeight: FontWeight.w700,
@@ -86,24 +89,23 @@ class OwnerShellView extends ConsumerWidget {
       body: ResponsiveWrapper(
         child: Builder(
           builder: (context) {
-            if (selectedTab == 0) {
-              return _buildDashboardTab(context, ref, salon, user);
-            } else if (selectedTab == 1) {
-              return _buildPlaceholderTab(
-                context,
-                ref,
-                l10n.tabAppointmentsCalendar,
-                Icons.event_note_rounded,
-              );
-            } else if (selectedTab == 2) {
-              return _buildPlaceholderTab(
-                context,
-                ref,
-                l10n.tabServicesPricing,
-                Icons.spa_rounded,
-              );
-            } else {
-              return _buildProfileTab(context, ref, salon, user);
+            switch (selectedTab) {
+              case OwnerPortalTabs.dashboard:
+                return _buildDashboardTab(context, ref, business, user);
+              case OwnerPortalTabs.shops:
+                return const ShopsTabView();
+              case OwnerPortalTabs.calendar:
+                return _buildPlaceholderTab(
+                  context,
+                  ref,
+                  l10n.navCalendar,
+                  Icons.calendar_month_rounded,
+                  subtitle: l10n.comingSoonCalendar,
+                );
+              case OwnerPortalTabs.team:
+                return const TeamTabView();
+              default:
+                return _buildProfileTab(context, ref, business, user);
             }
           },
         ),
@@ -116,7 +118,7 @@ class OwnerShellView extends ConsumerWidget {
         indicatorColor: AppColors.surfaceSubtle,
         destinations: [
           NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
+            icon: const Icon(Icons.dashboard_outlined),
             selectedIcon: Icon(
               Icons.dashboard_rounded,
               color: AppColors.primaryPurple,
@@ -124,23 +126,31 @@ class OwnerShellView extends ConsumerWidget {
             label: l10n.navDashboard,
           ),
           NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
+            icon: const Icon(Icons.storefront_outlined),
+            selectedIcon: Icon(
+              Icons.storefront_rounded,
+              color: AppColors.primaryPurple,
+            ),
+            label: l10n.navShops,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.calendar_month_outlined),
             selectedIcon: Icon(
               Icons.calendar_month_rounded,
               color: AppColors.primaryPurple,
             ),
-            label: l10n.navBookings,
+            label: l10n.navCalendar,
           ),
           NavigationDestination(
-            icon: Icon(Icons.spa_outlined),
+            icon: const Icon(Icons.groups_outlined),
             selectedIcon: Icon(
-              Icons.spa_rounded,
+              Icons.groups_rounded,
               color: AppColors.primaryPurple,
             ),
-            label: l10n.navServices,
+            label: l10n.navTeam,
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
+            icon: const Icon(Icons.person_outline_rounded),
             selectedIcon: Icon(
               Icons.person_rounded,
               color: AppColors.primaryPurple,
@@ -155,7 +165,7 @@ class OwnerShellView extends ConsumerWidget {
   Widget _buildDashboardTab(
     BuildContext context,
     WidgetRef ref,
-    dynamic salon,
+    BusinessModel? business,
     dynamic user,
   ) {
     final l10n = context.l10n;
@@ -322,8 +332,7 @@ class OwnerShellView extends ConsumerWidget {
           AppSpacing.v10,
           _buildActionTile(
             title: l10n.actionSalonProfile,
-            subtitle:
-                '${salon?.address ?? "SCO 42"}, ${salon?.city ?? "Mohali"}',
+            subtitle: user?.city ?? l10n.notProvided,
             icon: Icons.store_mall_directory_outlined,
           ),
           AppSpacing.v20,
@@ -433,8 +442,9 @@ class OwnerShellView extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     String title,
-    IconData icon,
-  ) {
+    IconData icon, {
+    String? subtitle,
+  }) {
     final l10n = context.l10n;
     return Center(
       child: Padding(
@@ -451,7 +461,7 @@ class OwnerShellView extends ConsumerWidget {
             AppText.title(title),
             AppSpacing.v8,
             AppText.body(
-              l10n.phase1ShellOwnerNote,
+              subtitle ?? l10n.phase1ShellOwnerNote,
               textAlign: TextAlign.center,
               color: AppColors.textSecondary,
             ),
@@ -464,7 +474,7 @@ class OwnerShellView extends ConsumerWidget {
   Widget _buildProfileTab(
     BuildContext context,
     WidgetRef ref,
-    dynamic salon,
+    BusinessModel? business,
     dynamic user,
   ) {
     final l10n = context.l10n;
@@ -492,10 +502,10 @@ class OwnerShellView extends ConsumerWidget {
             ),
           ),
           AppSpacing.v12,
-          AppText.title(salon?.salonName ?? 'Registered Salon'),
+          AppText.title(business?.brandName ?? l10n.businessAccount),
           AppSpacing.v4,
           Text(
-            salon?.salonType ?? 'Unisex Salon',
+            l10n.roleOwnerShort,
             style: TextStyle(
               fontSize: AppTextSizes.bodySmall,
               color: AppColors.textSecondary,
@@ -523,12 +533,12 @@ class OwnerShellView extends ConsumerWidget {
           _buildProfileTile(
             Icons.location_on_outlined,
             l10n.profileCityState,
-            '${salon?.city ?? "Mohali"}, ${salon?.state ?? "Punjab"}',
+            user?.city ?? l10n.notProvided,
           ),
           _buildProfileTile(
-            Icons.pin_drop_outlined,
-            l10n.pincode,
-            salon?.pincode ?? '160071',
+            Icons.business_outlined,
+            l10n.brandNameLabel,
+            business?.brandName ?? l10n.notProvided,
           ),
           AppSpacing.v32,
 

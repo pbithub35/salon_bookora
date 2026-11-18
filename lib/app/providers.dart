@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/constants/app_constants.dart';
 import '../core/network/api_executor.dart';
 import '../core/network/dio_client.dart';
 import '../core/network/network_info.dart';
@@ -10,6 +11,7 @@ import '../core/storage/prefs_storage.dart';
 import '../core/storage/secure_storage.dart';
 import '../data/repositories/auth_repository.dart';
 import '../data/repositories/mock_auth_repository.dart';
+import '../data/repositories/remote_auth_repository.dart';
 import '../l10n/gen/app_localizations.dart';
 
 /// Overridden in `main()` after `SharedPreferences.getInstance()`.
@@ -28,16 +30,26 @@ final networkInfoProvider = Provider<NetworkInfo>(
 );
 
 final dioProvider = Provider<Dio>(
-  (ref) => createDio(secureStorage: ref.watch(secureStorageProvider)),
+  (ref) => createDio(
+    secureStorage: ref.watch(secureStorageProvider),
+    baseUrl: AppConstants.apiBaseUrl,
+  ),
 );
 
 final apiExecutorProvider = Provider<ApiExecutor>(
   (ref) => ApiExecutor(networkInfo: ref.watch(networkInfoProvider)),
 );
 
-final authRepositoryProvider = Provider<AuthRepository>(
-  (ref) => MockAuthRepository(apiExecutor: ref.watch(apiExecutorProvider)),
-);
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final executor = ref.watch(apiExecutorProvider);
+  if (AppConstants.useRemoteAuth) {
+    return RemoteAuthRepository(
+      apiExecutor: executor,
+      dio: ref.watch(dioProvider),
+    );
+  }
+  return MockAuthRepository(apiExecutor: executor);
+});
 
 // ---------------------------------------------------------------------------
 // Locale

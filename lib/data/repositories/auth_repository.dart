@@ -1,4 +1,4 @@
-import '../models/salon_model.dart';
+import '../models/business_model.dart';
 import '../models/user_model.dart';
 import '../../core/utils/app_result.dart';
 
@@ -34,28 +34,28 @@ abstract class AuthRepository {
     String? city,
   });
 
+  /// Creates an owner business account only — no shop is created.
+  /// Shops are added later from the owner dashboard.
   Future<AppResult<AuthSessionData>> registerSalonOwner({
     required String ownerFullName,
     required String countryCode,
     required String ownerMobile,
     String? ownerEmail,
-    required String salonName,
-    required String salonType,
-    required String salonContact,
-    required String address,
-    required String city,
-    required String state,
-    required String pincode,
-    String? salonEmail,
-    String? description,
+    String? brandName,
   });
 }
 
 /// Authenticated session payload returned by the repository.
 class AuthSessionData {
-  const AuthSessionData({required this.user, this.salon, required this.token});
+  const AuthSessionData({
+    required this.user,
+    this.business,
+    required this.token,
+    this.refreshToken,
+  });
 
   final UserModel user;
-  final SalonModel? salon;
+  final BusinessModel? business;
   final String token;
+  final String? refreshToken;
 }

@@ -370,6 +370,36 @@ abstract class AppLocalizations {
   /// **'Salon Owner Registration'**
   String get ownerRegisterTitle;
 
+  /// No description provided for @ownerRegisterFormTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Business Account'**
+  String get ownerRegisterFormTitle;
+
+  /// No description provided for @ownerRegisterFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your details to create your owner account. You can add shops, services and staff later from the dashboard.'**
+  String get ownerRegisterFormSubtitle;
+
+  /// No description provided for @brandNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand Name (Optional)'**
+  String get brandNameLabel;
+
+  /// No description provided for @hintBrandName.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Looks Salon'**
+  String get hintBrandName;
+
+  /// No description provided for @businessAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Account'**
+  String get businessAccount;
+
   /// No description provided for @step1Title.
   ///
   /// In en, this message translates to:
@@ -505,7 +535,7 @@ abstract class AppLocalizations {
   /// No description provided for @ownerSuccessDesc.
   ///
   /// In en, this message translates to:
-  /// **'Your salon application has been submitted and is currently pending review.'**
+  /// **'Your business account is ready. Add your first shop to start taking bookings.'**
   String get ownerSuccessDesc;
 
   /// No description provided for @continueToPortal.
@@ -649,19 +679,19 @@ abstract class AppLocalizations {
   /// No description provided for @seedOwnerPending.
   ///
   /// In en, this message translates to:
-  /// **'Owner Pending'**
+  /// **'Owner • Draft Shop'**
   String get seedOwnerPending;
 
   /// No description provided for @seedOwnerApproved.
   ///
   /// In en, this message translates to:
-  /// **'Owner Approved'**
+  /// **'Owner • Live Shops'**
   String get seedOwnerApproved;
 
   /// No description provided for @seedOwnerRejected.
   ///
   /// In en, this message translates to:
-  /// **'Owner Rejected'**
+  /// **'Owner • New Account'**
   String get seedOwnerRejected;
 
   /// No description provided for @seedSuspended.
@@ -859,7 +889,7 @@ abstract class AppLocalizations {
   /// No description provided for @applicationReceived.
   ///
   /// In en, this message translates to:
-  /// **'Application Received'**
+  /// **'Business Account Created'**
   String get applicationReceived;
 
   /// No description provided for @customerSuccessNote.
@@ -871,7 +901,7 @@ abstract class AppLocalizations {
   /// No description provided for @ownerSuccessNote.
   ///
   /// In en, this message translates to:
-  /// **'Our verification team is reviewing your salon profile and address. You will receive real-time notifications on approval.'**
+  /// **'From your dashboard you can create shops, add services and staff, set offers, and configure booking rules.'**
   String get ownerSuccessNote;
 
   /// No description provided for @badgeApplicationUnderReview.
@@ -1557,6 +1587,594 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{field} is required'**
   String validationFieldRequired(String field);
+
+  /// No description provided for @navShops.
+  ///
+  /// In en, this message translates to:
+  /// **'Shops'**
+  String get navShops;
+
+  /// No description provided for @navCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get navCalendar;
+
+  /// No description provided for @navTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get navTeam;
+
+  /// No description provided for @shopsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Shops'**
+  String get shopsTitle;
+
+  /// No description provided for @shopsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No shops yet'**
+  String get shopsEmptyTitle;
+
+  /// No description provided for @shopsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first shop to manage services, team, and bookings.'**
+  String get shopsEmptySubtitle;
+
+  /// No description provided for @addShop.
+  ///
+  /// In en, this message translates to:
+  /// **'Add shop'**
+  String get addShop;
+
+  /// No description provided for @createShopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create shop'**
+  String get createShopTitle;
+
+  /// No description provided for @saveShop.
+  ///
+  /// In en, this message translates to:
+  /// **'Save shop'**
+  String get saveShop;
+
+  /// No description provided for @shopSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop created successfully'**
+  String get shopSaved;
+
+  /// No description provided for @shopDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop details'**
+  String get shopDetails;
+
+  /// No description provided for @shopServicesPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Services & prices'**
+  String get shopServicesPrices;
+
+  /// No description provided for @shopMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get shopMembers;
+
+  /// No description provided for @shopHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get shopHours;
+
+  /// No description provided for @shopBookingPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking page'**
+  String get shopBookingPage;
+
+  /// No description provided for @addMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Add member'**
+  String get addMember;
+
+  /// No description provided for @removeMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeMember;
+
+  /// No description provided for @memberName.
+  ///
+  /// In en, this message translates to:
+  /// **'Member name'**
+  String get memberName;
+
+  /// No description provided for @memberRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get memberRole;
+
+  /// No description provided for @roleOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get roleOwner;
+
+  /// No description provided for @roleSubAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Sub-admin'**
+  String get roleSubAdmin;
+
+  /// No description provided for @roleStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff'**
+  String get roleStaff;
+
+  /// No description provided for @permManageBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage bookings'**
+  String get permManageBookings;
+
+  /// No description provided for @permManageServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage services'**
+  String get permManageServices;
+
+  /// No description provided for @permManageStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage staff'**
+  String get permManageStaff;
+
+  /// No description provided for @permManageShopSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage shop settings'**
+  String get permManageShopSettings;
+
+  /// No description provided for @memberAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Member added'**
+  String get memberAdded;
+
+  /// No description provided for @memberRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Member removed'**
+  String get memberRemoved;
+
+  /// No description provided for @cannotRemoveOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner cannot be removed'**
+  String get cannotRemoveOwner;
+
+  /// No description provided for @comingSoonCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar management is coming soon.'**
+  String get comingSoonCalendar;
+
+  /// No description provided for @comingSoonTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Cross-shop team overview is coming soon. Manage members inside each shop.'**
+  String get comingSoonTeam;
+
+  /// No description provided for @bookingPageLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Public booking link'**
+  String get bookingPageLink;
+
+  /// No description provided for @bookingPagePreviewOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview only. A public booking link will be available when publishing is connected.'**
+  String get bookingPagePreviewOnly;
+
+  /// No description provided for @copyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get copyLink;
+
+  /// No description provided for @linkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking link copied'**
+  String get linkCopied;
+
+  /// No description provided for @noServicesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No services added yet'**
+  String get noServicesYet;
+
+  /// No description provided for @addService.
+  ///
+  /// In en, this message translates to:
+  /// **'Add service'**
+  String get addService;
+
+  /// No description provided for @serviceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Service name'**
+  String get serviceName;
+
+  /// No description provided for @serviceCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category (optional)'**
+  String get serviceCategory;
+
+  /// No description provided for @serviceDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (minutes)'**
+  String get serviceDuration;
+
+  /// No description provided for @servicePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price (₹)'**
+  String get servicePrice;
+
+  /// No description provided for @validationPositiveDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a duration greater than zero'**
+  String get validationPositiveDuration;
+
+  /// No description provided for @validationPositivePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a price greater than zero'**
+  String get validationPositivePrice;
+
+  /// No description provided for @invalidOpeningHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing time must be later than opening time'**
+  String get invalidOpeningHours;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @editMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit member'**
+  String get editMember;
+
+  /// No description provided for @saveMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Save member'**
+  String get saveMember;
+
+  /// No description provided for @memberPhoneAlreadyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'A member with this phone number already exists in this shop'**
+  String get memberPhoneAlreadyUsed;
+
+  /// No description provided for @staffServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Services this staff member can perform'**
+  String get staffServices;
+
+  /// No description provided for @staffServicesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select every service they can be booked for.'**
+  String get staffServicesHint;
+
+  /// No description provided for @noServicesToAssign.
+  ///
+  /// In en, this message translates to:
+  /// **'Add services to this shop before assigning them to staff.'**
+  String get noServicesToAssign;
+
+  /// No description provided for @durationMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String durationMinutes(int minutes);
+
+  /// No description provided for @dayMon.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get dayMon;
+
+  /// No description provided for @dayTue.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get dayTue;
+
+  /// No description provided for @dayWed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get dayWed;
+
+  /// No description provided for @dayThu.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get dayThu;
+
+  /// No description provided for @dayFri.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get dayFri;
+
+  /// No description provided for @daySat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get daySat;
+
+  /// No description provided for @daySun.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get daySun;
+
+  /// No description provided for @closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closed;
+
+  /// No description provided for @openHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{open} – {close}'**
+  String openHours(String open, String close);
+
+  /// No description provided for @shopName.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop name'**
+  String get shopName;
+
+  /// No description provided for @shopType.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop type'**
+  String get shopType;
+
+  /// No description provided for @shopPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get shopPhone;
+
+  /// No description provided for @addressLine1.
+  ///
+  /// In en, this message translates to:
+  /// **'Address line 1'**
+  String get addressLine1;
+
+  /// No description provided for @addressLine2.
+  ///
+  /// In en, this message translates to:
+  /// **'Address line 2 / landmark'**
+  String get addressLine2;
+
+  /// No description provided for @shopEmailOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop email (optional)'**
+  String get shopEmailOptional;
+
+  /// No description provided for @shopDescriptionOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop description (optional)'**
+  String get shopDescriptionOptional;
+
+  /// No description provided for @websiteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Website (optional)'**
+  String get websiteOptional;
+
+  /// No description provided for @socialLinksOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Social links (optional)'**
+  String get socialLinksOptional;
+
+  /// No description provided for @gstinOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'GSTIN (optional)'**
+  String get gstinOptional;
+
+  /// No description provided for @gstinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add GSTIN later in business settings'**
+  String get gstinHint;
+
+  /// No description provided for @stepShopDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop details'**
+  String get stepShopDetails;
+
+  /// No description provided for @stepLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get stepLocation;
+
+  /// No description provided for @stepHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours'**
+  String get stepHours;
+
+  /// No description provided for @nextStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get nextStep;
+
+  /// No description provided for @backStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backStep;
+
+  /// No description provided for @copyHoursToAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Mon hours to all open days'**
+  String get copyHoursToAll;
+
+  /// No description provided for @hoursCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours copied to open days'**
+  String get hoursCopied;
+
+  /// No description provided for @mapPinOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Map location (optional)'**
+  String get mapPinOptional;
+
+  /// No description provided for @setMapPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a pin'**
+  String get setMapPin;
+
+  /// No description provided for @clearMapPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove pin'**
+  String get clearMapPin;
+
+  /// No description provided for @mapPinSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin saved — you can change it later'**
+  String get mapPinSet;
+
+  /// No description provided for @mapPinSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'No map pin — you can continue without it'**
+  String get mapPinSkipped;
+
+  /// No description provided for @addLogo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add logo'**
+  String get addLogo;
+
+  /// No description provided for @addCoverPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add cover photo'**
+  String get addCoverPhoto;
+
+  /// No description provided for @mediaSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get mediaSelected;
+
+  /// No description provided for @mediaLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload later'**
+  String get mediaLater;
+
+  /// No description provided for @setupInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup in progress'**
+  String get setupInProgress;
+
+  /// No description provided for @shopReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get shopReady;
+
+  /// No description provided for @setupProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop setup progress'**
+  String get setupProgressTitle;
+
+  /// No description provided for @setupProgressSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} steps complete'**
+  String setupProgressSubtitle(int done, int total);
+
+  /// No description provided for @actionAddServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Add services'**
+  String get actionAddServices;
+
+  /// No description provided for @actionAddMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Add members'**
+  String get actionAddMembers;
+
+  /// No description provided for @actionReviewBookingPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Review booking page'**
+  String get actionReviewBookingPage;
+
+  /// No description provided for @openTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens'**
+  String get openTime;
+
+  /// No description provided for @closeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Closes'**
+  String get closeTime;
+
+  /// No description provided for @atLeastOneOpenDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep at least one day open'**
+  String get atLeastOneOpenDay;
 }
 
 class _AppLocalizationsDelegate

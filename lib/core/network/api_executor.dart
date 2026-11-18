@@ -8,7 +8,7 @@ import 'network_info.dart';
 
 /// Runs every API/repository call through a common gate:
 /// 1) connectivity check
-/// 2) timeout / socket / HTTP exception mapping → [AppFailure]
+/// 2) timeout / Dio / unexpected mapping → [AppFailure]
 class ApiExecutor {
   ApiExecutor({
     required NetworkInfo networkInfo,
@@ -18,7 +18,6 @@ class ApiExecutor {
   final NetworkInfo _networkInfo;
   final Duration requestTimeout;
 
-  /// Prefer this for repository methods that already return [AppResult].
   Future<AppResult<T>> guard<T>(Future<AppResult<T>> Function() action) async {
     if (!await _networkInfo.isConnected) {
       return const AppFailure(
@@ -44,7 +43,6 @@ class ApiExecutor {
     }
   }
 
-  /// Prefer this for raw remote calls that return data / throw.
   Future<AppResult<T>> run<T>(Future<T> Function() request) {
     return guard(() async {
       final data = await request();
@@ -67,7 +65,7 @@ class ApiExecutor {
           code: AppErrorCodes.network,
         );
       case DioExceptionType.badResponse:
-        return fromStatusCode<T>(e.response?.statusCode ?? 0);
+        return fromApiResponse<T>(e.response);
       case DioExceptionType.badCertificate:
       case DioExceptionType.cancel:
       case DioExceptionType.unknown:
@@ -79,23 +77,59 @@ class ApiExecutor {
     }
   }
 
-  /// Maps common HTTP status codes into [AppFailure].
+  /// Prefers API envelope `{ message, error: { code } }` when present.
+  static AppFailure<T> fromApiResponse<T>(Response<dynamic>? response) {
+    final statusCode = response?.statusCode ?? 0;
+    final data = response?.data;
+
+    String? message;
+    String? code;
+    if (data is Map) {
+      message = data['message']?.toString();
+      final error = data['error'];
+      if (error is Map) {
+        code = error['code']?.toString();
+      }
+    }
+
+    if (code != null && code.isNotEmpty) {
+      return AppFailure(
+        message?.isNotEmpty == true ? message! : AppErrorMessages.unexpected,
+        code: code,
+      );
+    }
+
+    return fromStatusCode<T>(statusCode, body: message);
+  }
+
   static AppFailure<T> fromStatusCode<T>(int statusCode, {String? body}) {
-    if (statusCode == 401 || statusCode == 403) {
-      return const AppFailure(
-        AppErrorMessages.unauthorized,
+    if (statusCode == 401) {
+      return AppFailure(
+        body ?? AppErrorMessages.unauthorized,
         code: AppErrorCodes.unauthorized,
       );
     }
+    if (statusCode == 403) {
+      return AppFailure(
+        body ?? 'Insufficient permissions',
+        code: AppErrorCodes.forbidden,
+      );
+    }
     if (statusCode == 404) {
-      return const AppFailure(
-        'Requested resource was not found.',
+      return AppFailure(
+        body ?? 'Requested resource was not found.',
         code: AppErrorCodes.notFound,
       );
     }
+    if (statusCode == 429) {
+      return AppFailure(
+        body ?? 'Too many requests. Please try again later.',
+        code: AppErrorCodes.otpRateLimited,
+      );
+    }
     if (statusCode >= 500) {
-      return const AppFailure(
-        AppErrorMessages.server,
+      return AppFailure(
+        body ?? AppErrorMessages.server,
         code: AppErrorCodes.server,
       );
     }

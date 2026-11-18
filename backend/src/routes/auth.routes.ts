@@ -1,0 +1,14 @@
+import { Router } from 'express';
+import { authController } from '../controllers/auth.controller';
+import { authenticate } from '../middleware/auth';
+import { validate } from '../middleware/validate';
+import { customerRegisterSchema, otpRequestSchema, otpVerifySchema, ownerRegisterSchema, refreshSchema } from '../validation/auth';
+const router = Router();
+router.post('/otp/send', validate(otpRequestSchema), authController.sendOtp);
+router.post('/otp/verify', validate(otpVerifySchema), authController.verifyOtp);
+router.post('/login', validate(otpRequestSchema.pick({ countryCode: true, mobileNumber: true })), authController.login);
+router.post('/register/customer', validate(customerRegisterSchema), authController.registerCustomer);
+router.post('/register/salon-owner', validate(ownerRegisterSchema), authController.registerOwner);
+router.post('/token/refresh', validate(refreshSchema), authController.refresh);
+router.post('/logout', authenticate, authController.logout);
+export default router;

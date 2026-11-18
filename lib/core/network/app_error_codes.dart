@@ -7,7 +7,14 @@ abstract final class AppErrorCodes {
   static const unauthorized = 'UNAUTHORIZED';
   static const notFound = 'NOT_FOUND';
   static const accountNotFound = 'ACCOUNT_NOT_FOUND';
+  static const accountExists = 'ACCOUNT_EXISTS';
+  static const accountRestricted = 'ACCOUNT_RESTRICTED';
   static const invalidOtp = 'INVALID_OTP';
+  static const otpRequired = 'OTP_REQUIRED';
+  static const otpRateLimited = 'OTP_RATE_LIMITED';
+  static const otpLocked = 'OTP_LOCKED';
+  static const validationError = 'VALIDATION_ERROR';
+  static const forbidden = 'FORBIDDEN';
   static const unexpected = 'UNEXPECTED';
 }
 

@@ -11,9 +11,12 @@ class AppRoutes {
   static const String registerOwner = '/register-owner';
   static const String otp = '/otp';
   static const String registrationSuccess = '/registration-success';
-  static const String pendingApproval = '/pending-approval';
-  static const String rejectedApplication = '/rejected-application';
   static const String restrictedAccount = '/restricted';
   static const String customerShell = '/customer-shell';
   static const String ownerShell = '/owner-shell';
+  static const String ownerShopCreate = '/owner-shell/shops/create';
+  static const String ownerShopDetail = '/owner-shell/shops/:shopId';
+
+  static String ownerShopDetailPath(String shopId) =>
+      '/owner-shell/shops/$shopId';
 }

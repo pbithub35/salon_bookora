@@ -1,0 +1,408 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  SALON_OWNER
+}
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+enum ShopStatus {
+  DRAFT
+  LIVE
+  PAUSED
+}
+enum ServiceMode {
+  SALON
+  HOME
+  BOTH
+}
+enum DiscountType {
+  FLAT
+  PERCENTAGE
+  COMBO_PRICE
+}
+enum StaffShopRole {
+  OWNER
+  MANAGER
+  SUB_ADMIN
+  STAFF
+}
+enum OtpPurpose {
+  LOGIN
+  REGISTER
+}
+
+model User {
+  id           String       @id @default(cuid())
+  fullName     String       @map("full_name") @db.VarChar(120)
+  countryCode  String       @default("+91") @map("country_code") @db.VarChar(8)
+  mobileNumber String       @map("mobile_number") @db.VarChar(20)
+  email        String?      @unique @db.VarChar(190)
+  city         String?      @db.VarChar(120)
+  locale       String       @default("en") @db.VarChar(8)
+  role         UserRole
+  status       UserStatus   @default(ACTIVE)
+  passwordHash String?      @map("password_hash") @db.VarChar(255)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  business     Business?
+  staffProfile StaffMember?
+  refreshTokens RefreshToken[]
+  otps         Otp[]
+
+  @@unique([countryCode, mobileNumber])
+  @@index([role, status])
+  @@map("users")
+}
+
+// Business account owned by a SALON_OWNER. `brandName` is optional and only
+// useful for owners with multiple locations; a single-shop owner can skip it.
+model Business {
+  id        String   @id @default(cuid())
+  ownerId   String   @unique @map("owner_id")
+  brandName String?  @map("brand_name") @db.VarChar(160)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  shops     Shop[]
+  staff     StaffMember[]
+
+  @@map("businesses")
+}
+
+model Shop {
+  id            String        @id @default(cuid())
+  businessId    String        @map("business_id")
+  name          String        @db.VarChar(160)
+  shopType      String?       @map("shop_type") @db.VarChar(80)
+  contactNumber String        @map("contact_number") @db.VarChar(24)
+  email         String?       @db.VarChar(190)
+  addressLine1  String        @map("address_line1") @db.VarChar(255)
+  addressLine2  String?       @map("address_line2") @db.VarChar(255)
+  city          String        @db.VarChar(120)
+  state         String        @db.VarChar(120)
+  pincode       String        @db.VarChar(16)
+  latitude      Float?
+  longitude     Float?
+  description   String?       @db.Text
+  website       String?       @db.VarChar(255)
+  status        ShopStatus    @default(DRAFT)
+  bookingSlug   String?       @unique @map("booking_slug") @db.VarChar(80)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  business      Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  hours         ShopHour[]
+  bookingSettings ShopBookingSettings?
+  homeService   ShopHomeService?
+  categories    Category[]
+  staffAssignments ShopStaffAssignment[]
+  offers        Offer[]
+  packages      Package[]
+  combos        Combo[]
+
+  @@index([businessId, status])
+  @@index([city, pincode])
+  @@map("shops")
+}
+
+model ShopHour {
+  id           String  @id @default(cuid())
+  shopId       String  @map("shop_id")
+  // 1 = Monday … 7 = Sunday
+  dayOfWeek    Int     @map("day_of_week")
+  openMinutes  Int?    @map("open_minutes")
+  closeMinutes Int?    @map("close_minutes")
+  isClosed     Boolean @default(false) @map("is_closed")
+  shop         Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@unique([shopId, dayOfWeek])
+  @@map("shop_hours")
+}
+
+// Per-shop booking & cancellation policies.
+model ShopBookingSettings {
+  id                    String @id @default(cuid())
+  shopId                String @unique @map("shop_id")
+  advanceBookingDays    Int    @default(30) @map("advance_booking_days")
+  slotIntervalMinutes   Int    @default(30) @map("slot_interval_minutes")
+  cancellationCutoffHrs Int    @default(24) @map("cancellation_cutoff_hrs")
+  advanceNoticeHours    Int    @default(2) @map("advance_notice_hours")
+  onlineBookingEnabled  Boolean @default(true) @map("online_booking_enabled")
+  shop                  Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@map("shop_booking_settings")
+}
+
+// Shop-level home service coverage; per-service rules live on ServiceHomeConfig.
+model ShopHomeService {
+  id                  String   @id @default(cuid())
+  shopId              String   @unique @map("shop_id")
+  enabled             Boolean  @default(false)
+  coverageRadiusKm    Float?   @map("coverage_radius_km")
+  serviceablePincodes String?  @map("serviceable_pincodes") @db.Text
+  travelBufferMinutes Int      @default(30) @map("travel_buffer_minutes")
+  shop                Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@map("shop_home_services")
+}
+
+model Category {
+  id           String       @id @default(cuid())
+  shopId       String       @map("shop_id")
+  name         String       @db.VarChar(120)
+  sortOrder    Int          @default(0) @map("sort_order")
+  shop         Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  subcategories Subcategory[]
+
+  @@index([shopId, sortOrder])
+  @@map("categories")
+}
+
+model Subcategory {
+  id         String    @id @default(cuid())
+  categoryId String    @map("category_id")
+  name       String    @db.VarChar(120)
+  sortOrder  Int       @default(0) @map("sort_order")
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  services   Service[]
+
+  @@index([categoryId, sortOrder])
+  @@map("subcategories")
+}
+
+model Service {
+  id                   String   @id @default(cuid())
+  subcategoryId        String   @map("subcategory_id")
+  name                 String   @db.VarChar(160)
+  description          String?  @db.Text
+  durationMinutes      Int      @map("duration_minutes")
+  price                Decimal  @db.Decimal(10, 2)
+  compareAtPrice       Decimal? @map("compare_at_price") @db.Decimal(10, 2)
+  imageUrl             String?  @map("image_url") @db.VarChar(500)
+  mode                 ServiceMode @default(BOTH)
+  onlineBookingEnabled Boolean  @default(true) @map("online_booking_enabled")
+  isActive             Boolean  @default(true) @map("is_active")
+  sortOrder            Int      @default(0) @map("sort_order")
+  subcategory          Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
+  addons               ServiceAddon[]
+  homeConfig           ServiceHomeConfig?
+  staffAssignments     ServiceStaffAssignment[]
+  offerServices        OfferService[]
+  packageItems         PackageItem[]
+  comboItems           ComboItem[]
+
+  @@index([subcategoryId, sortOrder])
+  @@map("services")
+}
+
+model ServiceAddon {
+  id              String  @id @default(cuid())
+  serviceId       String  @map("service_id")
+  name            String  @db.VarChar(120)
+  price           Decimal @db.Decimal(10, 2)
+  durationMinutes Int     @default(0) @map("duration_minutes")
+  service         Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@map("service_addons")
+}
+
+// Home-service rules for a single service (fee, radius/PINs, buffers).
+model ServiceHomeConfig {
+  id                  String   @id @default(cuid())
+  serviceId           String   @unique @map("service_id")
+  extraFee            Decimal? @map("extra_fee") @db.Decimal(10, 2)
+  freeRadiusKm        Float?   @map("free_radius_km")
+  serviceablePincodes String?  @map("serviceable_pincodes") @db.Text
+  travelBufferMinutes Int      @default(30) @map("travel_buffer_minutes")
+  minOrderValue       Decimal? @map("min_order_value") @db.Decimal(10, 2)
+  advanceHours        Int      @default(24) @map("advance_hours")
+  service             Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@map("service_home_configs")
+}
+
+// A person in the business Team directory; assigned to one or more shops.
+model StaffMember {
+  id           String   @id @default(cuid())
+  businessId   String   @map("business_id")
+  userId       String?  @unique @map("user_id")
+  fullName     String   @map("full_name") @db.VarChar(120)
+  mobileNumber String   @map("mobile_number") @db.VarChar(24)
+  email        String?  @db.VarChar(190)
+  isBookable   Boolean  @default(true) @map("is_bookable")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  shopAssignments    ShopStaffAssignment[]
+  serviceAssignments ServiceStaffAssignment[]
+
+  @@unique([businessId, mobileNumber])
+  @@map("staff_members")
+}
+
+model ShopStaffAssignment {
+  id             String         @id @default(cuid())
+  shopId         String         @map("shop_id")
+  staffId        String         @map("staff_id")
+  role           StaffShopRole  @default(STAFF)
+  canTakeBookings Boolean       @default(true) @map("can_take_bookings")
+  // JSON: { manageBookings, manageServices, manageStaff, manageShopSettings }
+  permissions    String?        @db.Text
+  shop           Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  staff          StaffMember    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  hours          ShopStaffHour[]
+
+  @@unique([shopId, staffId])
+  @@map("shop_staff_assignments")
+}
+
+model ShopStaffHour {
+  id           String @id @default(cuid())
+  assignmentId String @map("assignment_id")
+  dayOfWeek    Int    @map("day_of_week")
+  startMinute  Int?   @map("start_minute")
+  endMinute    Int?   @map("end_minute")
+  isOff        Boolean @default(false) @map("is_off")
+  assignment   ShopStaffAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, dayOfWeek])
+  @@map("shop_staff_hours")
+}
+
+// Staff members allowed to perform a service.
+model ServiceStaffAssignment {
+  id        String      @id @default(cuid())
+  serviceId String      @map("service_id")
+  staffId   String      @map("staff_id")
+  service   Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  staff     StaffMember @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, staffId])
+  @@map("service_staff_assignments")
+}
+
+model Offer {
+  id            String       @id @default(cuid())
+  shopId        String       @map("shop_id")
+  name          String       @db.VarChar(160)
+  description   String?      @db.Text
+  discountType  DiscountType @map("discount_type")
+  discountValue Decimal?     @map("discount_value") @db.Decimal(10, 2)
+  fixedPrice    Decimal?     @map("fixed_price") @db.Decimal(10, 2)
+  startAt       DateTime     @map("start_at")
+  endAt         DateTime?    @map("end_at")
+  isActive      Boolean      @default(true) @map("is_active")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  shop          Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  services      OfferService[]
+
+  @@index([shopId, isActive])
+  @@map("offers")
+}
+
+model OfferService {
+  offerId   String  @map("offer_id")
+  serviceId String  @map("service_id")
+  offer     Offer   @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([offerId, serviceId])
+  @@map("offer_services")
+}
+
+// Redeemable across visits (e.g. 5 Hair Spa sessions).
+model Package {
+  id           String   @id @default(cuid())
+  shopId       String   @map("shop_id")
+  name         String   @db.VarChar(160)
+  description  String?  @db.Text
+  price        Decimal  @db.Decimal(10, 2)
+  validityDays Int?     @map("validity_days")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  shop         Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  items        PackageItem[]
+
+  @@map("packages")
+}
+
+model PackageItem {
+  id        String  @id @default(cuid())
+  packageId String  @map("package_id")
+  serviceId String  @map("service_id")
+  quantity  Int     @default(1)
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([packageId, serviceId])
+  @@map("package_items")
+}
+
+// Single-booking combo at a fixed price (e.g. Haircut + Beard Trim ₹449).
+model Combo {
+  id          String   @id @default(cuid())
+  shopId      String   @map("shop_id")
+  name        String   @db.VarChar(160)
+  description String?  @db.Text
+  fixedPrice  Decimal  @map("fixed_price") @db.Decimal(10, 2)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  shop        Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  items       ComboItem[]
+
+  @@map("combos")
+}
+
+model ComboItem {
+  id        String  @id @default(cuid())
+  comboId   String  @map("combo_id")
+  serviceId String  @map("service_id")
+  combo     Combo   @relation(fields: [comboId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([comboId, serviceId])
+  @@map("combo_items")
+}
+
+model Otp {
+  id           String     @id @default(cuid())
+  countryCode  String     @map("country_code") @db.VarChar(8)
+  mobileNumber String     @map("mobile_number") @db.VarChar(20)
+  purpose      OtpPurpose
+  codeHash     String     @map("code_hash") @db.VarChar(255)
+  expiresAt    DateTime   @map("expires_at")
+  verifiedAt   DateTime?  @map("verified_at")
+  attemptCount Int        @default(0) @map("attempt_count")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  userId       String?    @map("user_id")
+  user         User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([countryCode, mobileNumber, purpose, createdAt])
+  @@map("otps")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique @map("token_hash") @db.VarChar(255)
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@map("refresh_tokens")
+}

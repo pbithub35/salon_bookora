@@ -2,7 +2,7 @@ import '../../core/constants/app_constants.dart';
 import '../../core/network/api_executor.dart';
 import '../../core/network/app_error_codes.dart';
 import '../../core/utils/app_result.dart';
-import '../models/salon_model.dart';
+import '../models/business_model.dart';
 import '../models/user_model.dart';
 import 'auth_repository.dart';
 
@@ -98,15 +98,7 @@ class MockAuthRepository implements AuthRepository {
     required String countryCode,
     required String ownerMobile,
     String? ownerEmail,
-    required String salonName,
-    required String salonType,
-    required String salonContact,
-    required String address,
-    required String city,
-    required String state,
-    required String pincode,
-    String? salonEmail,
-    String? description,
+    String? brandName,
   }) {
     return _api.guard(() async {
       await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -117,29 +109,23 @@ class MockAuthRepository implements AuthRepository {
         countryCode: countryCode,
         mobileNumber: ownerMobile,
         email: ownerEmail,
-        city: city,
         role: UserRole.salonOwner,
         status: UserStatus.active,
         createdAt: DateTime.now(),
       );
 
-      final salon = SalonModel(
-        id: 'sal_${DateTime.now().millisecondsSinceEpoch}',
+      // Business account only — shops are created later from the dashboard.
+      final business = BusinessModel(
+        id: 'biz_${DateTime.now().millisecondsSinceEpoch}',
         ownerId: user.id,
-        salonName: salonName,
-        salonType: salonType,
-        contactNumber: salonContact,
-        email: salonEmail,
-        address: address,
-        city: city,
-        state: state,
-        pincode: pincode,
-        description: description,
-        approvalStatus: SalonApprovalStatus.pending,
+        brandName:
+            (brandName == null || brandName.trim().isEmpty)
+                ? null
+                : brandName.trim(),
       );
 
       return AppSuccess(
-        AuthSessionData(user: user, salon: salon, token: _newToken()),
+        AuthSessionData(user: user, business: business, token: _newToken()),
       );
     });
   }
@@ -182,24 +168,16 @@ class MockAuthRepository implements AuthRepository {
       );
       return AuthSessionData(
         user: user,
-        salon: SalonModel(
-          id: 'sal_pending_1',
+        business: BusinessModel(
+          id: 'biz_owner_pending',
           ownerId: user.id,
-          salonName: 'Glow Unisex Studio',
-          salonType: 'Unisex Salon',
-          contactNumber: mobile,
-          address: 'SCO 42, Sector 70',
-          city: 'Mohali',
-          state: 'Punjab',
-          pincode: '160071',
-          approvalStatus: SalonApprovalStatus.pending,
+          brandName: 'Glow Unisex Studio',
         ),
         token: _newToken(),
       );
     }
 
     if (mobile == AppConstants.seedOwnerApprovedMobile) {
-      final now = DateTime.now();
       final user = UserModel(
         id: 'usr_owner_approved',
         fullName: 'Rajesh Verma',
@@ -211,21 +189,10 @@ class MockAuthRepository implements AuthRepository {
       );
       return AuthSessionData(
         user: user,
-        salon: SalonModel(
-          id: 'sal_approved_1',
+        business: BusinessModel(
+          id: 'biz_owner_approved',
           ownerId: user.id,
-          salonName: 'The Royal Spa & Salon',
-          salonType: 'Spa & Wellness',
-          contactNumber: mobile,
-          address: 'Mall Road, Civil Lines',
-          city: 'Ludhiana',
-          state: 'Punjab',
-          pincode: '141001',
-          approvalStatus: SalonApprovalStatus.approved,
-          approvedAt: now,
-          trialStartsAt: now,
-          trialEndsAt: now.add(const Duration(days: 90)),
-          trialStatus: SalonTrialStatus.active,
+          brandName: 'The Royal Spa',
         ),
         token: _newToken(),
       );
@@ -243,20 +210,7 @@ class MockAuthRepository implements AuthRepository {
       );
       return AuthSessionData(
         user: user,
-        salon: SalonModel(
-          id: 'sal_rejected_1',
-          ownerId: user.id,
-          salonName: 'Elite Hair Studio',
-          salonType: 'Hair Studio',
-          contactNumber: mobile,
-          address: 'Ranjit Avenue, Block B',
-          city: 'Amritsar',
-          state: 'Punjab',
-          pincode: '143001',
-          approvalStatus: SalonApprovalStatus.rejected,
-          rejectionReason:
-              'Uploaded address proof could not be verified with government municipal records.',
-        ),
+        business: BusinessModel(id: 'biz_owner_rejected', ownerId: user.id),
         token: _newToken(),
       );
     }

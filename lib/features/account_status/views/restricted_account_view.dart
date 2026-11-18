@@ -12,7 +12,7 @@ import '../../../core/constants/app_text_sizes.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/ui_feedback.dart';
-import '../viewmodels/status_viewmodel.dart';
+import '../../auth/viewmodels/auth_notifier.dart';
 
 class RestrictedAccountView extends ConsumerWidget {
   const RestrictedAccountView({super.key});
@@ -20,7 +20,6 @@ class RestrictedAccountView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final vm = ref.read(statusViewModelProvider.notifier);
     return AuroraBackground(
       headerHeight: 240.h,
       headerContent: Column(
@@ -117,7 +116,8 @@ class RestrictedAccountView extends ConsumerWidget {
               // Logout Button
               AppButton.secondary(
                 text: l10n.logout,
-                onPressed: vm.logout,
+                onPressed: () =>
+                    ref.read(authProvider.notifier).logout(),
                 textColor: AppColors.error,
                 icon: const Icon(Icons.logout_rounded, color: AppColors.error),
               ),

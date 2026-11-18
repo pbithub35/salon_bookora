@@ -3,7 +3,6 @@ import 'package:salon_bookora/core/constants/app_constants.dart';
 import 'package:salon_bookora/core/network/api_executor.dart';
 import 'package:salon_bookora/core/network/app_error_codes.dart';
 import 'package:salon_bookora/core/network/network_info.dart';
-import 'package:salon_bookora/data/models/salon_model.dart';
 import 'package:salon_bookora/data/models/user_model.dart';
 import 'package:salon_bookora/data/repositories/auth_repository.dart';
 import 'package:salon_bookora/data/repositories/mock_auth_repository.dart';
@@ -79,7 +78,7 @@ void main() {
       expect(result.isSuccess, isTrue);
     });
 
-    test('loginWithMobile returns approved owner with trial', () async {
+    test('loginWithMobile returns seed owner with business', () async {
       final result = await repository.loginWithMobile(
         countryCode: '+91',
         mobileNumber: AppConstants.seedOwnerApprovedMobile,
@@ -88,8 +87,7 @@ void main() {
       expect(result.isSuccess, isTrue);
       final session = result.dataOrNull!;
       expect(session.user.role, UserRole.salonOwner);
-      expect(session.salon?.approvalStatus, SalonApprovalStatus.approved);
-      expect(session.salon?.trialStatus, SalonTrialStatus.active);
+      expect(session.business?.brandName, 'The Royal Spa');
       expect(session.token, isNotEmpty);
     });
 
@@ -107,27 +105,22 @@ void main() {
       expect(session.user.fullName, 'Test User');
       expect(session.user.role, UserRole.customer);
       expect(session.user.status, UserStatus.active);
-      expect(session.salon, isNull);
+      expect(session.business, isNull);
     });
 
-    test('registerSalonOwner starts as pending approval', () async {
+    test('registerSalonOwner creates business account without a shop', () async {
       final result = await repository.registerSalonOwner(
         ownerFullName: 'Owner',
         countryCode: '+91',
         ownerMobile: '9000022222',
-        salonName: 'New Salon',
-        salonType: 'Unisex Salon',
-        salonContact: '9000022222',
-        address: 'SCO 1',
-        city: 'Mohali',
-        state: 'Punjab',
-        pincode: '160071',
+        ownerEmail: 'owner@example.com',
+        brandName: 'Looks Salon',
       );
 
       expect(result.isSuccess, isTrue);
       final session = result.dataOrNull!;
       expect(session.user.role, UserRole.salonOwner);
-      expect(session.salon?.approvalStatus, SalonApprovalStatus.pending);
+      expect(session.business?.brandName, 'Looks Salon');
     });
   });
 }

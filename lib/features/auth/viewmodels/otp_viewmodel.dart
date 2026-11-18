@@ -189,15 +189,7 @@ class OtpViewModel extends Notifier<OtpState> {
             countryCode: args.countryCode,
             ownerMobile: args.mobileNumber,
             ownerEmail: args.ownerEmail,
-            salonName: args.salonName ?? l10n.defaultSalonName,
-            salonType: args.salonType ?? 'Unisex Salon',
-            salonContact: args.salonContact ?? args.mobileNumber,
-            address: args.address ?? '',
-            city: args.city ?? '',
-            state: args.state ?? '',
-            pincode: args.pincode ?? '',
-            salonEmail: args.salonEmail,
-            description: args.description,
+            brandName: args.brandName,
           );
 
     return result.when(

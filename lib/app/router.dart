@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/constants/app_routes.dart';
-import '../features/account_status/views/pending_approval_view.dart';
-import '../features/account_status/views/rejected_application_view.dart';
 import '../features/account_status/views/restricted_account_view.dart';
 import '../features/auth/viewmodels/auth_notifier.dart';
 import '../features/auth/viewmodels/otp_args.dart';
@@ -18,7 +16,9 @@ import '../features/auth/views/welcome_view.dart';
 import '../features/customer_portal/views/customer_shell_view.dart';
 import '../features/onboarding/viewmodels/onboarding_viewmodel.dart';
 import '../features/onboarding/views/onboarding_view.dart';
+import '../features/owner_portal/views/create_shop_view.dart';
 import '../features/owner_portal/views/owner_shell_view.dart';
+import '../features/owner_portal/views/shop_detail_view.dart';
 import '../features/splash/views/splash_view.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -28,8 +28,6 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 const _destinationRoutes = {
   AppRoutes.customerShell,
   AppRoutes.ownerShell,
-  AppRoutes.pendingApproval,
-  AppRoutes.rejectedApplication,
   AppRoutes.restrictedAccount,
 };
 
@@ -57,15 +55,22 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       if (path == AppRoutes.splash) return null;
 
+      final isOwnerShopRoute = path.startsWith('${AppRoutes.ownerShell}/');
+
       if (!auth.isLoggedIn) {
         final needsSession =
             _destinationRoutes.contains(path) ||
+            isOwnerShopRoute ||
             path == AppRoutes.registrationSuccess;
         return needsSession ? AppRoutes.welcome : null;
       }
 
       if (_entryRoutes.contains(path)) return auth.destinationRoute;
       if (_destinationRoutes.contains(path) && path != auth.destinationRoute) {
+        return auth.destinationRoute;
+      }
+      if (isOwnerShopRoute &&
+          auth.destinationRoute != AppRoutes.ownerShell) {
         return auth.destinationRoute;
       }
       return null;
@@ -92,16 +97,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         fade: true,
       ),
       _route(
-        AppRoutes.pendingApproval,
-        (_) => const PendingApprovalView(),
-        fade: true,
-      ),
-      _route(
-        AppRoutes.rejectedApplication,
-        (_) => const RejectedApplicationView(),
-        fade: true,
-      ),
-      _route(
         AppRoutes.restrictedAccount,
         (_) => const RestrictedAccountView(),
         fade: true,
@@ -112,6 +107,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         fade: true,
       ),
       _route(AppRoutes.ownerShell, (_) => const OwnerShellView(), fade: true),
+      _route(AppRoutes.ownerShopCreate, (_) => const CreateShopView()),
+      GoRoute(
+        path: AppRoutes.ownerShopDetail,
+        pageBuilder: (context, state) {
+          final shopId = state.pathParameters['shopId'] ?? '';
+          return MaterialPage<void>(
+            key: state.pageKey,
+            child: ShopDetailView(shopId: shopId),
+          );
+        },
+      ),
     ],
   );
   ref.onDispose(router.dispose);

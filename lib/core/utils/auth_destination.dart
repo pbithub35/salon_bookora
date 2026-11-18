@@ -1,4 +1,3 @@
-import '../../data/models/salon_model.dart';
 import '../../data/models/user_model.dart';
 import '../constants/app_routes.dart';
 
@@ -7,30 +6,19 @@ import '../constants/app_routes.dart';
 class AuthDestination {
   AuthDestination._();
 
-  static String resolve({UserModel? user, SalonModel? salon}) {
+  static String resolve({UserModel? user}) {
     if (user == null) return AppRoutes.welcome;
 
     if (user.status == UserStatus.suspended) {
       return AppRoutes.restrictedAccount;
     }
 
-    if (user.role == UserRole.customer) {
-      return AppRoutes.customerShell;
-    }
-
-    // Salon owner flow is gated by salon approval status.
-    if (salon == null || salon.approvalStatus == SalonApprovalStatus.pending) {
-      return AppRoutes.pendingApproval;
-    }
-
-    if (salon.approvalStatus == SalonApprovalStatus.rejected) {
-      return AppRoutes.rejectedApplication;
-    }
-
-    if (salon.approvalStatus == SalonApprovalStatus.approved) {
+    // Owner accounts land directly on the dashboard — shops are created
+    // from there ("Create your first shop"), not during registration.
+    if (user.role == UserRole.salonOwner) {
       return AppRoutes.ownerShell;
     }
 
-    return AppRoutes.pendingApproval;
+    return AppRoutes.customerShell;
   }
 }

@@ -14,14 +14,7 @@ class OtpArgs {
     this.city,
     this.ownerFullName,
     this.ownerEmail,
-    this.salonName,
-    this.salonType,
-    this.salonContact,
-    this.address,
-    this.state,
-    this.pincode,
-    this.salonEmail,
-    this.description,
+    this.brandName,
   });
 
   final String countryCode;
@@ -34,15 +27,8 @@ class OtpArgs {
   final String? email;
   final String? city;
 
-  // Salon owner registration
+  // Salon owner (business account) registration
   final String? ownerFullName;
   final String? ownerEmail;
-  final String? salonName;
-  final String? salonType;
-  final String? salonContact;
-  final String? address;
-  final String? state;
-  final String? pincode;
-  final String? salonEmail;
-  final String? description;
+  final String? brandName;
 }
